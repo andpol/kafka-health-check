@@ -60,6 +60,7 @@ type ZkConnection interface {
 	Create(path string, data []byte, flags int32, acl []zk.ACL) (string, error)
 	Children(path string) ([]string, *zk.Stat, error)
 	Get(path string) ([]byte, *zk.Stat, error)
+	NewLock(path string, acl []zk.ACL) (*zk.Lock, error)
 }
 
 // Actual implementation based on samuel/go-zookeeper/zk
@@ -103,4 +104,11 @@ func (zkConn *zkConnection) Children(path string) ([]string, *zk.Stat, error) {
 
 func (zkConn *zkConnection) Get(path string) ([]byte, *zk.Stat, error) {
 	return zkConn.connection.Get(path)
+}
+
+// Creates a lock object, in a locked state
+func (zkConn *zkConnection) NewLock(path string, acl []zk.ACL) (*zk.Lock, error) {
+	l := zk.NewLock(zkConn.connection, path, acl)
+	err := l.Lock()
+	return l, err
 }
