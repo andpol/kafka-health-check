@@ -157,7 +157,7 @@ func (check *HealthCheck) createTopic(name string, forHealthCheck bool) (err err
 	defer zkConn.Close()
 
 	// Create a distributed lock to prevent race conditions when multiple health check instances expand replication
-	lock, err := zkConn.NewLock(chroot + "/kafka-health-check", zk.WorldACL(zk.PermAll))
+	lock, err := zkConn.NewLock(chroot+"/kafka-health-check", zk.WorldACL(zk.PermAll))
 	if err != nil {
 		return errors.Wrap(err, "Unable to aquire ZK lock")
 	}
@@ -293,11 +293,11 @@ func (check *HealthCheck) closeConnection(deleteTopicIfPresent bool) {
 		defer zkConn.Close()
 
 		err = check.deleteTopic(zkConn, chroot, check.config.topicName, check.partitionID)
-		if (err != nil) {
+		if err != nil {
 			log.Warnf(`Unable to delete topic "%s"`, check.config.topicName)
 		}
 		err = check.deleteTopic(zkConn, chroot, check.config.replicationTopicName, check.replicationPartitionID)
-		if (err != nil) {
+		if err != nil {
 			log.Warnf(`Unable to delete topic "%s"`, check.config.replicationTopicName)
 		}
 	}
@@ -306,7 +306,7 @@ func (check *HealthCheck) closeConnection(deleteTopicIfPresent bool) {
 
 func (check *HealthCheck) deleteTopic(zkConn ZkConnection, chroot, name string, partitionID int32) error {
 	// Create a distributed lock to prevent race conditions when multiple health check instances shrink replication
-	lock, err := zkConn.NewLock(chroot + "/kafka-health-check", zk.WorldACL(zk.PermAll))
+	lock, err := zkConn.NewLock(chroot+"/kafka-health-check", zk.WorldACL(zk.PermAll))
 	if err != nil {
 		return errors.Wrap(err, "Unable to aquire ZK lock")
 	}
