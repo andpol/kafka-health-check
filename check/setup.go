@@ -251,7 +251,8 @@ func reassignPartition(zk ZkConnection, partitionID int32, replicas []int32, top
 		log.Info("Creating reassign partition node")
 		err = createZkNode(zk, chroot+"/admin/reassign_partitions", reassign, true)
 		if err != nil {
-			log.Warn("Error while creating reassignment node", err)
+			log.Warn("Error while creating reassignment node, retrying in 1 second...", err)
+			time.Sleep(1 * time.Second)
 		}
 		repeat = err != nil
 	}
